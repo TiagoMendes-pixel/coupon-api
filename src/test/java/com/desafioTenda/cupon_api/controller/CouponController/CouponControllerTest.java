@@ -12,7 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +37,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 false,
                 false,
                 "ACTIVE"
@@ -54,7 +54,7 @@ class CouponControllerTest {
                                           "code": "ABC123",
                                           "description": "Cupom de teste",
                                           "discountValue": 10.00,
-                                          "expirationDate": "2026-12-31T23:59:00",
+                                          "expirationDate": "2026-12-31T23:59:00Z",
                                           "published": false
                                         }
                                         """)
@@ -77,7 +77,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom 1",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 false,
                 false,
                 "ACTIVE"
@@ -88,7 +88,7 @@ class CouponControllerTest {
                 "DEF456",
                 "Cupom 2",
                 new BigDecimal("20.00"),
-                LocalDateTime.of(2027, 1, 31, 23, 59),
+                Instant.parse("2027-01-31T23:59:00Z"),
                 true,
                 false,
                 "ACTIVE"
@@ -112,7 +112,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 false,
                 false,
                 "ACTIVE"
@@ -151,7 +151,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 true,
                 false,
                 "ACTIVE"
@@ -176,7 +176,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 true,
                 true,
                 "ACTIVE"
@@ -201,7 +201,7 @@ class CouponControllerTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.of(2026, 12, 31, 23, 59),
+                Instant.parse("2026-12-31T23:59:00Z"),
                 false,
                 false,
                 "ACTIVE"
@@ -246,7 +246,7 @@ class CouponControllerTest {
                                       "code": "ABC123",
                                       "description": "Cupom inválido",
                                       "discountValue": 0.20,
-                                      "expirationDate": "2026-12-31T23:59:00",
+                                      "expirationDate": "2026-12-31T23:59:00Z",
                                       "published": false
                                     }
                                     """)

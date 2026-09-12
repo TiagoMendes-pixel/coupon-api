@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -68,7 +68,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -105,7 +105,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom 1",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -113,7 +113,7 @@ class CouponServiceTest {
                 "DEF456",
                 "Cupom 2",
                 new BigDecimal("20.00"),
-                LocalDateTime.now().plusDays(20),
+                Instant.now().plusSeconds(1728000),
                 true
         );
 
@@ -136,7 +136,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -161,7 +161,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -188,7 +188,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -211,7 +211,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 
@@ -236,7 +236,7 @@ class CouponServiceTest {
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
-                LocalDateTime.now().plusDays(10),
+                Instant.now().plusSeconds(864000),
                 false
         );
 

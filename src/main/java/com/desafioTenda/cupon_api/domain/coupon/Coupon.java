@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 public class Coupon {
@@ -20,7 +20,7 @@ public class Coupon {
     private String code;
     private String description;
     private BigDecimal discountValue;
-    private LocalDateTime expirationDate;
+    private Instant expirationDate;
     private boolean published;
     private boolean redeemed;
     private boolean deleted;
@@ -30,7 +30,7 @@ public class Coupon {
     }
 
     public Coupon(String code, String description, BigDecimal discountValue,
-                  LocalDateTime expirationDate, boolean published) {
+                  Instant expirationDate, boolean published) {
 
         this.code = sanitizeAndValidateCode(code);
         this.description = description;
@@ -57,7 +57,7 @@ public class Coupon {
         return discountValue;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public Instant getExpirationDate() {
         return expirationDate;
     }
 
@@ -107,7 +107,7 @@ public class Coupon {
             );
         }
 
-        if (expirationDate.isBefore(LocalDateTime.now())) {
+        if (expirationDate.isBefore(Instant.now())) {
             throw new IllegalStateException(
                     "Coupon has expired"
             );
@@ -125,7 +125,7 @@ public class Coupon {
     }
 
     private void validateExpirationDate() {
-        if (expirationDate == null || expirationDate.isBefore(LocalDateTime.now())) {
+        if (expirationDate == null || expirationDate.isBefore(Instant.now())) {
             throw new IllegalArgumentException(
                     "Expiration date must be in the future"
             );

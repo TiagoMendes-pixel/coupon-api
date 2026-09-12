@@ -3,7 +3,7 @@ package com.desafioTenda.cupon_api.domain.coupon;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +16,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -33,7 +33,7 @@ public class CouponTest {
                         "ABC123",
                         "Coupon description",
                         new BigDecimal("0.49"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -46,7 +46,7 @@ public class CouponTest {
                 "ABC-123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -62,7 +62,7 @@ public class CouponTest {
                         "ABC12",
                         "Coupon description",
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -77,7 +77,7 @@ public class CouponTest {
                         "ABC1234",
                         "Coupon description",
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -92,7 +92,7 @@ public class CouponTest {
                         "ABC123",
                         "Coupon description",
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().minusDays(1),
+                        Instant.now().minusSeconds(86400),
                         false
                 )
         );
@@ -122,7 +122,7 @@ public class CouponTest {
                         "ABC123",
                         null,
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -137,7 +137,7 @@ public class CouponTest {
                         "ABC123",
                         "",
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -152,7 +152,7 @@ public class CouponTest {
                         "ABC123",
                         "   ",
                         new BigDecimal("0.5"),
-                        LocalDateTime.now().plusDays(1),
+                        Instant.now().plusSeconds(86400),
                         false
                 )
         );
@@ -165,7 +165,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -181,7 +181,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -197,7 +197,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -214,7 +214,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -231,7 +231,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -251,7 +251,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusSeconds(1),
+                Instant.now().plusSeconds(1),
                 false
         );
 
@@ -276,7 +276,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -292,7 +292,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -310,7 +310,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -329,7 +329,7 @@ public class CouponTest {
                 "ABC123",
                 "Coupon description",
                 new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plusSeconds(86400),
                 false
         );
 
@@ -344,7 +344,7 @@ public class CouponTest {
     @Test
     void shouldNotDeleteCouponTwice() {
         Coupon coupon = new Coupon("ABC123", "Test", new BigDecimal("0.5"),
-                LocalDateTime.now().plusDays(1), false);
+                Instant.now().plusSeconds(86400), false);
         coupon.delete();
         assertThrows(IllegalStateException.class, coupon::delete);
     }

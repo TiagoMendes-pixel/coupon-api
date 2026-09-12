@@ -75,6 +75,8 @@ A entidade `Coupon` é responsável por garantir as principais regras de negóci
 
 ### Data de Expiração
 
+Use ISO 8601 com fuso, por exemplo `2027-12-31T23:59:59Z`. As respostas usam UTC (`Z`), e a validação compara instantes, sem depender do fuso do computador ou container.
+
 * A data de expiração é obrigatória.
 * A data de expiração deve estar no futuro.
 
@@ -148,7 +150,7 @@ Exemplo:
   "code": "ABC-123",
   "description": "Desconto de teste",
   "discountValue": 10.00,
-  "expirationDate": "2026-12-31T23:59:59",
+  "expirationDate": "2027-12-31T23:59:59Z",
   "published": false
 }
 ```
@@ -161,7 +163,7 @@ Exemplo:
   "code": "ABC123",
   "description": "Desconto de teste",
   "discountValue": 10.00,
-  "expirationDate": "2026-12-31T23:59:59",
+  "expirationDate": "2027-12-31T23:59:59Z",
   "published": false,
   "redeemed": false,
   "status": "ACTIVE"
