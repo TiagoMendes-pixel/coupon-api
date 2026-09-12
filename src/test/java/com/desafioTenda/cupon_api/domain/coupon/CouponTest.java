@@ -286,7 +286,7 @@ public class CouponTest {
     }
 
     @Test
-    public void shouldNotDeleteRedeemedCoupon() {
+    public void shouldDeleteRedeemedCoupon() {
 
         Coupon coupon = new Coupon(
                 "ABC123",
@@ -299,10 +299,8 @@ public class CouponTest {
         coupon.publish();
         coupon.redeem();
 
-        assertThrows(
-                IllegalStateException.class,
-                coupon::delete
-        );
+        coupon.delete();
+        assertTrue(coupon.isDeleted());
     }
 
     @Test
@@ -343,4 +341,11 @@ public class CouponTest {
         );
     }
 
+    @Test
+    void shouldNotDeleteCouponTwice() {
+        Coupon coupon = new Coupon("ABC123", "Test", new BigDecimal("0.5"),
+                LocalDateTime.now().plusDays(1), false);
+        coupon.delete();
+        assertThrows(IllegalStateException.class, coupon::delete);
+    }
 }

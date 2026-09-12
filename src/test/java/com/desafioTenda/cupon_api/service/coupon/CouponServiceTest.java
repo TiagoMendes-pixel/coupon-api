@@ -1,5 +1,6 @@
 package com.desafioTenda.cupon_api.service.coupon;
 
+import java.util.UUID;
 import com.desafioTenda.cupon_api.domain.coupon.Coupon;
 import com.desafioTenda.cupon_api.domain.coupon.CouponRepository;
 import com.desafioTenda.cupon_api.dto.coupon.CouponResponse;
@@ -71,30 +72,30 @@ class CouponServiceTest {
                 false
         );
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
-        CouponResponse response = couponService.findById(1L);
+        CouponResponse response = couponService.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         assertNotNull(response);
         assertEquals("ABC123", response.code());
         assertEquals("Cupom de teste", response.description());
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
     }
 
     @Test
     void shouldThrowExceptionWhenCouponIsNotFound() {
 
-        when(couponRepository.findByIdAndDeletedFalse(999L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999")))
                 .thenReturn(Optional.empty());
 
         assertThrows(
                 CouponNotFoundException.class,
-                () -> couponService.findById(999L)
+                () -> couponService.findById(UUID.fromString("00000000-0000-0000-0000-000000000999"))
         );
 
-        verify(couponRepository).findByIdAndDeletedFalse(999L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999"));
     }
 
     @Test
@@ -139,17 +140,17 @@ class CouponServiceTest {
                 false
         );
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
         when(couponRepository.save(coupon))
                 .thenReturn(coupon);
 
-        CouponResponse response = couponService.publish(1L);
+        CouponResponse response = couponService.publish(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         assertTrue(response.published());
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         verify(couponRepository).save(coupon);
     }
 
@@ -166,17 +167,17 @@ class CouponServiceTest {
 
         coupon.publish();
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
         when(couponRepository.save(coupon))
                 .thenReturn(coupon);
 
-        CouponResponse response = couponService.redeem(1L);
+        CouponResponse response = couponService.redeem(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         assertTrue(response.redeemed());
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         verify(couponRepository).save(coupon);
     }
 
@@ -191,15 +192,15 @@ class CouponServiceTest {
                 false
         );
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
         assertThrows(
                 IllegalStateException.class,
-                () -> couponService.redeem(1L)
+                () -> couponService.redeem(UUID.fromString("00000000-0000-0000-0000-000000000001"))
         );
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         verify(couponRepository, never()).save(any(Coupon.class));
     }
 
@@ -214,22 +215,22 @@ class CouponServiceTest {
                 false
         );
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
         when(couponRepository.save(coupon))
                 .thenReturn(coupon);
 
-        CouponResponse response = couponService.delete(1L);
+        CouponResponse response = couponService.delete(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
-        assertTrue(response.deleted());
+        assertEquals("DELETED", response.status());
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         verify(couponRepository).save(coupon);
     }
 
     @Test
-    void shouldNotDeleteRedeemedCoupon() {
+    void shouldDeleteRedeemedCoupon() {
 
         Coupon coupon = new Coupon(
                 "ABC123",
@@ -242,60 +243,59 @@ class CouponServiceTest {
         coupon.publish();
         coupon.redeem();
 
-        when(couponRepository.findByIdAndDeletedFalse(1L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(Optional.of(coupon));
 
-        assertThrows(
-                IllegalStateException.class,
-                () -> couponService.delete(1L)
-        );
+        when(couponRepository.save(coupon)).thenReturn(coupon);
+        couponService.delete(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        assertTrue(coupon.isDeleted());
 
-        verify(couponRepository).findByIdAndDeletedFalse(1L);
-        verify(couponRepository, never()).save(any(Coupon.class));
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        verify(couponRepository).save(coupon);
     }
 
     @Test
     void shouldThrowExceptionWhenPublishingCouponNotFound() {
 
-        when(couponRepository.findByIdAndDeletedFalse(999L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999")))
                 .thenReturn(Optional.empty());
 
         assertThrows(
                 CouponNotFoundException.class,
-                () -> couponService.publish(999L)
+                () -> couponService.publish(UUID.fromString("00000000-0000-0000-0000-000000000999"))
         );
 
-        verify(couponRepository).findByIdAndDeletedFalse(999L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999"));
         verify(couponRepository, never()).save(any(Coupon.class));
     }
 
     @Test
     void shouldThrowExceptionWhenRedeemingCouponNotFound() {
 
-        when(couponRepository.findByIdAndDeletedFalse(999L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999")))
                 .thenReturn(Optional.empty());
 
         assertThrows(
                 CouponNotFoundException.class,
-                () -> couponService.redeem(999L)
+                () -> couponService.redeem(UUID.fromString("00000000-0000-0000-0000-000000000999"))
         );
 
-        verify(couponRepository).findByIdAndDeletedFalse(999L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999"));
         verify(couponRepository, never()).save(any(Coupon.class));
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingCouponNotFound() {
 
-        when(couponRepository.findByIdAndDeletedFalse(999L))
+        when(couponRepository.findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999")))
                 .thenReturn(Optional.empty());
 
         assertThrows(
                 CouponNotFoundException.class,
-                () -> couponService.delete(999L)
+                () -> couponService.delete(UUID.fromString("00000000-0000-0000-0000-000000000999"))
         );
 
-        verify(couponRepository).findByIdAndDeletedFalse(999L);
+        verify(couponRepository).findByIdAndDeletedFalse(UUID.fromString("00000000-0000-0000-0000-000000000999"));
         verify(couponRepository, never()).save(any(Coupon.class));
     }
 

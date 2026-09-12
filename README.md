@@ -105,7 +105,8 @@ Isso significa que o registro não é fisicamente removido do banco de dados. Em
 
 As seguintes regras são aplicadas:
 
-* Um cupom resgatado não pode ser excluído.
+* Um cupom pode ser excluído mesmo após o resgate.
+* Um cupom já excluído não pode ser excluído novamente.
 * Cupons excluídos não são retornados nas consultas da API.
 * Cupons excluídos não podem ser publicados.
 * Cupons excluídos não podem ser resgatados.
@@ -114,16 +115,20 @@ As seguintes regras são aplicadas:
 
 ## Endpoints da API
 
+Os IDs são UUIDs. As respostas de criação e consulta contêm `status: "ACTIVE"`; o campo interno `deleted` não é exposto.
+
+O contrato do desafio define POST, GET por ID e DELETE em `/coupon`. A listagem e as operações de publicar/resgatar já existentes foram mantidas como extensões.
+
 A aplicação disponibiliza os seguintes endpoints:
 
 | Método | Endpoint                | Descrição                             |
 | ------ | ----------------------- | ------------------------------------- |
-| POST   | `/coupons`              | Cria um novo cupom                    |
-| GET    | `/coupons`              | Retorna todos os cupons ativos        |
-| GET    | `/coupons/{id}`         | Retorna um cupom ativo pelo ID        |
-| PATCH  | `/coupons/{id}/publish` | Publica um cupom                      |
-| PATCH  | `/coupons/{id}/redeem`  | Resgata um cupom                      |
-| DELETE | `/coupons/{id}`         | Realiza a exclusão lógica de um cupom |
+| POST   | `/coupon`              | Cria um novo cupom                    |
+| GET    | `/coupon`              | Retorna todos os cupons ativos        |
+| GET    | `/coupon/{id}`         | Retorna um cupom ativo pelo ID        |
+| PATCH  | `/coupon/{id}/publish` | Publica um cupom                      |
+| PATCH  | `/coupon/{id}/redeem`  | Resgata um cupom                      |
+| DELETE | `/coupon/{id}`         | Realiza a exclusão lógica de um cupom |
 
 ---
 
@@ -132,7 +137,7 @@ A aplicação disponibiliza os seguintes endpoints:
 ### Requisição
 
 ```http
-POST /coupons
+POST /coupon
 Content-Type: application/json
 ```
 
@@ -152,14 +157,14 @@ Exemplo:
 
 ```json
 {
-  "id": 1,
+  "id": "00000000-0000-0000-0000-000000000001",
   "code": "ABC123",
   "description": "Desconto de teste",
   "discountValue": 10.00,
   "expirationDate": "2026-12-31T23:59:59",
   "published": false,
   "redeemed": false,
-  "deleted": false
+  "status": "ACTIVE"
 }
 ```
 
@@ -178,7 +183,7 @@ Observe que o código enviado como `ABC-123` é armazenado como `ABC123`, pois o
 ### Consultar todos
 
 ```http
-GET /coupons
+GET /coupon
 ```
 
 Retorna todos os cupons ativos.
@@ -188,7 +193,7 @@ Cupons que passaram por soft delete não são retornados.
 ### Consultar por ID
 
 ```http
-GET /coupons/{id}
+GET /coupon/{id}
 ```
 
 Retorna um cupom ativo pelo seu identificador.
@@ -204,7 +209,7 @@ Caso o cupom não exista ou tenha sido excluído, a API retorna:
 ## Publicar um Cupom
 
 ```http
-PATCH /coupons/{id}/publish
+PATCH /coupon/{id}/publish
 ```
 
 Publica um cupom existente e ativo.
@@ -216,7 +221,7 @@ Um cupom que já foi excluído não pode ser publicado.
 ## Resgatar um Cupom
 
 ```http
-PATCH /coupons/{id}/redeem
+PATCH /coupon/{id}/redeem
 ```
 
 Para realizar o resgate, o cupom precisa estar publicado.
@@ -239,20 +244,14 @@ Quando existe um conflito com o estado atual do cupom, a API retorna:
 ## Excluir um Cupom
 
 ```http
-DELETE /coupons/{id}
+DELETE /coupon/{id}
 ```
 
 A exclusão é realizada através de **soft delete**.
 
 O registro permanece armazenado no banco de dados, porém seu atributo `deleted` passa a possuir o valor `true`.
 
-Um cupom que já foi resgatado não pode ser excluído.
-
-Nesse caso, a API retorna:
-
-```text
-409 Conflict
-```
+A exclusão retorna `204 No Content`, sem corpo. Cupons resgatados também podem ser excluídos. Uma nova tentativa pela API retorna `404 Not Found`, pois as consultas filtram cupons excluídos; o domínio também impede a exclusão repetida diretamente.
 
 ---
 
@@ -263,6 +262,7 @@ A API utiliza principalmente os seguintes códigos HTTP:
 | Status            | Descrição                                         |
 | ----------------- | ------------------------------------------------- |
 | `200 OK`          | Operação realizada com sucesso                    |
+| `204 No Content` | Cupom excluído, sem corpo de resposta |
 | `201 Created`     | Cupom criado com sucesso                          |
 | `400 Bad Request` | Dados inválidos ou violação de regra de validação |
 | `404 Not Found`   | Cupom inexistente ou não mais ativo               |
@@ -424,7 +424,7 @@ Entre os cenários testados estão:
 * Bloqueio de resgate antes da publicação.
 * Bloqueio de resgate de cupom expirado.
 * Soft delete.
-* Bloqueio da exclusão de cupom resgatado.
+* Exclusão de cupom resgatado e bloqueio da exclusão repetida.
 * Bloqueio de operações em cupons excluídos.
 * Consulta de cupons.
 * Cenários de cupom não encontrado.
@@ -508,7 +508,7 @@ O Repository possui consultas específicas para retornar somente cupons que não
 
 As regras de domínio, os serviços e o comportamento HTTP da API possuem testes automatizados.
 
-A cobertura obtida durante o desenvolvimento supera o requisito mínimo definido para o desafio.
+A cobertura percentual ainda precisa ser medida com uma ferramenta de cobertura; a quantidade de testes não comprova o requisito de 80%.
 
 ---
 

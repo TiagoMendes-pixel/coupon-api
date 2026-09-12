@@ -1,5 +1,6 @@
 package com.desafioTenda.cupon_api.domain.coupon;
 
+import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +15,8 @@ public class Coupon {
     private static final BigDecimal MIN_DISCOUNT_VALUE = new BigDecimal("0.5");
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String code;
     private String description;
     private BigDecimal discountValue;
@@ -44,7 +45,7 @@ public class Coupon {
         validateDescription();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -154,9 +155,9 @@ public class Coupon {
     }
 
     public void delete() {
-        if (redeemed) {
+        if (deleted) {
             throw new IllegalStateException(
-                    "Redeemed coupon cannot be deleted"
+                    "Coupon has already been deleted"
             );
         }
 

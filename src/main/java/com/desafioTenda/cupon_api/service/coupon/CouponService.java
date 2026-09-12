@@ -1,5 +1,6 @@
 package com.desafioTenda.cupon_api.service.coupon;
 
+import java.util.UUID;
 import com.desafioTenda.cupon_api.domain.coupon.Coupon;
 import com.desafioTenda.cupon_api.domain.coupon.CouponRepository;
 import com.desafioTenda.cupon_api.dto.coupon.CouponResponse;
@@ -41,7 +42,7 @@ public class CouponService {
                 .toList();
     }
 
-    public CouponResponse findById(Long id) {
+    public CouponResponse findById(UUID id) {
 
         Coupon coupon = couponRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
@@ -51,7 +52,7 @@ public class CouponService {
 
     }
 
-    public CouponResponse publish(Long id) {
+    public CouponResponse publish(UUID id) {
 
         Coupon coupon = couponRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
@@ -63,7 +64,7 @@ public class CouponService {
         return toResponse(savedCoupon);
     }
 
-    public CouponResponse redeem(Long id) {
+    public CouponResponse redeem(UUID id) {
 
         Coupon coupon = couponRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
@@ -75,7 +76,7 @@ public class CouponService {
         return toResponse(savedCoupon);
     }
 
-    public CouponResponse delete(Long id) {
+    public CouponResponse delete(UUID id) {
 
         Coupon coupon = couponRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
@@ -96,7 +97,7 @@ public class CouponService {
                 coupon.getExpirationDate(),
                 coupon.isPublished(),
                 coupon.isRedeemed(),
-                coupon.isDeleted()
+                coupon.isDeleted() ? "DELETED" : "ACTIVE"
         );
     }
 }

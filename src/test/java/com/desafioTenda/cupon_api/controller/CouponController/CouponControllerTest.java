@@ -1,5 +1,6 @@
 package com.desafioTenda.cupon_api.controller.CouponController;
 
+import java.util.UUID;
 import com.desafioTenda.cupon_api.dto.coupon.CouponResponse;
 import com.desafioTenda.cupon_api.exception.CouponNotFoundException;
 import com.desafioTenda.cupon_api.service.coupon.CouponService;
@@ -32,21 +33,21 @@ class CouponControllerTest {
     void shouldCreateCouponAndReturnCreated() throws Exception {
 
         CouponResponse response = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 false,
                 false,
-                false
+                "ACTIVE"
         );
 
         when(couponService.create(any()))
                 .thenReturn(response);
 
         mockMvc.perform(
-                        post("/coupons")
+                        post("/coupon")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("""
                                         {
@@ -59,44 +60,44 @@ class CouponControllerTest {
                                         """)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value("00000000-0000-0000-0000-000000000001"))
                 .andExpect(jsonPath("$.code").value("ABC123"))
                 .andExpect(jsonPath("$.description").value("Cupom de teste"))
                 .andExpect(jsonPath("$.discountValue").value(10.00))
                 .andExpect(jsonPath("$.published").value(false))
                 .andExpect(jsonPath("$.redeemed").value(false))
-                .andExpect(jsonPath("$.deleted").value(false));
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test
     void shouldFindAllCoupons() throws Exception {
 
         CouponResponse coupon1 = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom 1",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 false,
                 false,
-                false
+                "ACTIVE"
         );
 
         CouponResponse coupon2 = new CouponResponse(
-                2L,
+                UUID.fromString("00000000-0000-0000-0000-000000000002"),
                 "DEF456",
                 "Cupom 2",
                 new BigDecimal("20.00"),
                 LocalDateTime.of(2027, 1, 31, 23, 59),
                 true,
                 false,
-                false
+                "ACTIVE"
         );
 
         when(couponService.findAll())
                 .thenReturn(List.of(coupon1, coupon2));
 
-        mockMvc.perform(get("/coupons"))
+        mockMvc.perform(get("/coupon"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].code").value("ABC123"))
@@ -107,126 +108,125 @@ class CouponControllerTest {
     void shouldFindCouponById() throws Exception {
 
         CouponResponse coupon = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 false,
                 false,
-                false
+                "ACTIVE"
         );
 
-        when(couponService.findById(1L))
+        when(couponService.findById(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(coupon);
 
-        mockMvc.perform(get("/coupons/{id}", 1L))
+        mockMvc.perform(get("/coupon/{id}", UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value("00000000-0000-0000-0000-000000000001"))
                 .andExpect(jsonPath("$.code").value("ABC123"))
                 .andExpect(jsonPath("$.description").value("Cupom de teste"))
                 .andExpect(jsonPath("$.discountValue").value(10.00))
                 .andExpect(jsonPath("$.published").value(false))
                 .andExpect(jsonPath("$.redeemed").value(false))
-                .andExpect(jsonPath("$.deleted").value(false));
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test
     void shouldReturnNotFoundWhenCouponDoesNotExist() throws Exception {
 
-        when(couponService.findById(999L))
-                .thenThrow(new CouponNotFoundException(999L));
+        when(couponService.findById(UUID.fromString("00000000-0000-0000-0000-000000000999")))
+                .thenThrow(new CouponNotFoundException(UUID.fromString("00000000-0000-0000-0000-000000000999")));
 
-        mockMvc.perform(get("/coupons/{id}", 999L))
+        mockMvc.perform(get("/coupon/{id}", UUID.fromString("00000000-0000-0000-0000-000000000999")))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Coupon not found with id: 999"));
+                .andExpect(content().string("Coupon not found with id: 00000000-0000-0000-0000-000000000999"));
     }
 
     @Test
     void shouldPublishCoupon() throws Exception {
 
         CouponResponse publishedCoupon = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 true,
                 false,
-                false
+                "ACTIVE"
         );
 
-        when(couponService.publish(1L))
+        when(couponService.publish(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(publishedCoupon);
 
-        mockMvc.perform(patch("/coupons/{id}/publish", 1L))
+        mockMvc.perform(patch("/coupon/{id}/publish", UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value("00000000-0000-0000-0000-000000000001"))
                 .andExpect(jsonPath("$.published").value(true))
                 .andExpect(jsonPath("$.redeemed").value(false))
-                .andExpect(jsonPath("$.deleted").value(false));
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test
     void shouldRedeemCoupon() throws Exception {
 
         CouponResponse redeemedCoupon = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 true,
                 true,
-                false
+                "ACTIVE"
         );
 
-        when(couponService.redeem(1L))
+        when(couponService.redeem(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(redeemedCoupon);
 
-        mockMvc.perform(patch("/coupons/{id}/redeem", 1L))
+        mockMvc.perform(patch("/coupon/{id}/redeem", UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value("00000000-0000-0000-0000-000000000001"))
                 .andExpect(jsonPath("$.published").value(true))
                 .andExpect(jsonPath("$.redeemed").value(true))
-                .andExpect(jsonPath("$.deleted").value(false));
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test
     void shouldDeleteCoupon() throws Exception {
 
         CouponResponse deletedCoupon = new CouponResponse(
-                1L,
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
                 "ABC123",
                 "Cupom de teste",
                 new BigDecimal("10.00"),
                 LocalDateTime.of(2026, 12, 31, 23, 59),
                 false,
                 false,
-                true
+                "ACTIVE"
         );
 
-        when(couponService.delete(1L))
+        when(couponService.delete(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenReturn(deletedCoupon);
 
-        mockMvc.perform(delete("/coupons/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.deleted").value(true));
+        mockMvc.perform(delete("/coupon/{id}", UUID.fromString("00000000-0000-0000-0000-000000000001")))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
     }
 
     @Test
-    void shouldReturnConflictWhenDeletingRedeemedCoupon() throws Exception {
+    void shouldReturnConflictWhenDeletingAlreadyDeletedCoupon() throws Exception {
 
-        when(couponService.delete(1L))
+        when(couponService.delete(UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .thenThrow(new IllegalStateException(
-                        "Redeemed coupon cannot be deleted"
+                        "Coupon has already been deleted"
                 ));
 
-        mockMvc.perform(delete("/coupons/{id}", 1L))
+        mockMvc.perform(delete("/coupon/{id}", UUID.fromString("00000000-0000-0000-0000-000000000001")))
                 .andExpect(status().isConflict())
                 .andExpect(content().string(
-                        "Redeemed coupon cannot be deleted"
+                        "Coupon has already been deleted"
                 ));
     }
 
@@ -239,7 +239,7 @@ class CouponControllerTest {
                 ));
 
         mockMvc.perform(
-                        post("/coupons")
+                        post("/coupon")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("""
                                     {
